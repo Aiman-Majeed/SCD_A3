@@ -44,6 +44,24 @@ public class Assignment3
             model.removeRow(selectedRow);
         }
     }
+    
+    private void editBook()
+    {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow == -1) 
+        {
+            showMessage("Select a book to edit.", "Error");
+            return;
+        }
+
+        String title = JOptionPane.showInputDialog("Edit Title:", model.getValueAt(selectedRow, 1));
+        String author = JOptionPane.showInputDialog("Edit Author:", model.getValueAt(selectedRow, 2));
+        int year = Integer.parseInt(JOptionPane.showInputDialog("Edit Year:", model.getValueAt(selectedRow, 3)));
+
+        model.setValueAt(title, selectedRow, 1);
+        model.setValueAt(author, selectedRow, 2);
+        model.setValueAt(year, selectedRow, 3);
+    }
 
     private void showMessage(String message, String title) 
     {
@@ -62,6 +80,7 @@ public class Assignment3
         JPanel p = new JPanel();
         p.add(createButton("Add Book", e -> addBook()));
         p.add(createButton("Delete Book", e -> deleteBook()));
+        p.add(createButton("Edit Book", e -> editBook()));
         return p;
     }
     public static void main(String[] args) 
