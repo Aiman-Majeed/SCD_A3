@@ -1,5 +1,10 @@
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,7 +49,7 @@ public class Assignment3
             model.removeRow(selectedRow);
         }
     }
-    
+
     private void editBook()
     {
         int selectedRow = table.getSelectedRow();
@@ -81,7 +86,49 @@ public class Assignment3
         p.add(createButton("Add Book", e -> addBook()));
         p.add(createButton("Delete Book", e -> deleteBook()));
         p.add(createButton("Edit Book", e -> editBook()));
+        p.add(createButton("Save Data", e -> saveData()));
+        p.add(createButton("Load Data", e -> loadData()));
         return p;
+    }
+    private void saveData() 
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("library_data.txt"))) 
+        {
+            for (int row = 0; row < model.getRowCount(); row++) {
+                String id = model.getValueAt(row, 0).toString();
+                String title = model.getValueAt(row, 1).toString();
+                String author = model.getValueAt(row, 2).toString();
+                String year = model.getValueAt(row, 3).toString();
+                String line = id + "," + title + "," + author + "," + year;
+                writer.write(line);
+                writer.newLine();
+            }
+            showMessage("Data saved successfully.", "Data Saved");
+        } catch (IOException e) 
+        {
+            showMessage("Error saving data.", "Error");
+        }
+    }
+    private void loadData() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("library_data.txt"))) {
+            model.setRowCount(0);
+            String line;
+            int id = 1;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String title = parts[1];
+                    String author = parts[2];
+                    String year = parts[3];
+                    model.addRow(new Object[]{id, title, author, year});
+                    id++;
+                }
+            }
+            showMessage("Data loaded successfully.", "Data Loaded");
+        } catch (IOException e) 
+        {
+            showMessage("Error loading data.", "Error");
+        }
     }
     public static void main(String[] args) 
     {
