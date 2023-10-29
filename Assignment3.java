@@ -1,10 +1,6 @@
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,6 +20,7 @@ public class Assignment3
         table = new JTable(model);
         frame.add(new JScrollPane(table), BorderLayout.CENTER);
         frame.add(createButtonPanel(), BorderLayout.SOUTH);
+        addMouseListenerToTable();
         frame.setVisible(true);
     }
 
@@ -129,6 +126,15 @@ public class Assignment3
         {
             showMessage("Error loading data.", "Error");
         }
+    }
+        private void addMouseListenerToTable() {
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                table.setRowSelectionInterval(row, row);
+            }
+        });
     }
     public static void main(String[] args) 
     {
